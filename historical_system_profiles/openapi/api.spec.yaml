@@ -39,6 +39,14 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HistoricalProfile'
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -57,6 +65,14 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HistoricalProfileStub'
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -71,14 +87,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: '#/components/schemas/HistoricalProfileIn'
       responses:
         '200':
           description: the created profile
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/HistoricalProfile'
         '400':
           $ref: '#/components/responses/BadRequest'
         '500':
@@ -115,14 +131,57 @@ components:
           type: string
         type:
           type: string
-    HistoricalProfile:
-      # TODO: need to fill this in!
+    HistoricalProfileIn:
       type: object
+      additionalProperties: false
+      required:
+        - profile
+        - inventory_id
+      properties:
+        profile:
+          type: object
+        inventory_id:
+          type: string
+    HistoricalProfile:
+      type: object
+      additionalProperties: false
+      required:
+        - account
+        - created
+        - display_name
+        - id
+        - inventory_id
+        - system_profile
+        - updated
+      properties:
+        account:
+          type: string
+        created:
+          type: string
+        display_name:
+          type: string
+        inventory_id:
+          type: string
+        id:
+          type: string
+        system_profile:
+          type: object
+        updated:
+          type: string
     Version:
       required:
         - version
       properties:
         version:
+          type: string
+    HistoricalProfileStub:
+      required:
+        - inventory_id
+        - display_name
+      properties:
+        inventory_id:
+          type: string
+        display_name:
           type: string
   parameters:
     InventoryId:
