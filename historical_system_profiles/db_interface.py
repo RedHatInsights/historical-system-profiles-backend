@@ -38,6 +38,7 @@ def get_hsps_by_inventory_id(inventory_id, account_number, limit, offset):
         HistoricalSystemProfile.inventory_id == inventory_id,
     )
 
+    query = query.order_by(captured_date.desc())
     query = query.limit(limit).offset(offset)
     query_results = query.all()
     return query_results
