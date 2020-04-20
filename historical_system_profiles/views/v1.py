@@ -71,7 +71,7 @@ def get_hsps_by_ids(profile_ids):
     return {"data": [r.to_json() for r in result_with_updated_names]}
 
 
-def get_hsps_by_inventory_id(inventory_id):
+def get_hsps_by_inventory_id(inventory_id, limit, offset):
     """
     return a list of historical system profiles for a given inventory id
     """
@@ -92,7 +92,8 @@ def get_hsps_by_inventory_id(inventory_id):
     sorted_profile_metadata = sorted(
         profile_metadata, key=lambda p: p["captured_date"], reverse=True
     )
-    result = {"profiles": sorted_profile_metadata}
+    profile_metadata_slice = sorted_profile_metadata[offset : limit + offset]
+    result = {"profiles": profile_metadata_slice}
     return {"data": [result]}
 
 
