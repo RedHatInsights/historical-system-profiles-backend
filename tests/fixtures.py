@@ -85,6 +85,5 @@ FETCH_SYSTEMS_WITH_PROFILES_RESULT = (
             ],
         },
         "tags": [],
-        "updated": "2018-01-31T14:00:00.500000Z",
     },
 )
