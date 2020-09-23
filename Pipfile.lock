@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "74280bee00d3bd8382ccad9d5fcf5a304ebe0b9d39794e8bef19837877232bd9"
+            "sha256": "2f2a6b112c011040be0a2bbbf9c42cc3ff4b3fb1505764178d76e42c4b4a926d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -33,16 +33,17 @@
         },
         "boto3": {
             "hashes": [
-                "sha256:3f0d8dc7dec39876b7b224469639d8eef4dba1c2dc779a1b30fc73f99a18f742"
+                "sha256:97f81f40f32d683d52f2e31ef14afae77fc1aa3bc41d05ff3cd838c91d406dfc",
+                "sha256:cff8528c5bc4a13cbb85d09288dad66758c3f2367e77dc250cb2e9dc4b9ec59f"
             ],
-            "version": "==1.15.3"
+            "version": "==1.15.4"
         },
         "botocore": {
             "hashes": [
-                "sha256:37d4bd89e55b6873b5c08a8cdc8d41654c7b3c0b7cb44e30210b539503d03da6",
-                "sha256:f84fcfe329faa576a4e705756ffb896bd8227947fef764c72ef382135f6ecb22"
+                "sha256:36073d47386e260c6dca17c65479c1746ed5a95f6c29a06e9163d3026150440f",
+                "sha256:78b88dd1b7566be9b932bcd213c6c57d54beeaecd8009eb0224c91a7eb1a937e"
             ],
-            "version": "==1.18.3"
+            "version": "==1.18.4"
         },
         "certifi": {
             "hashes": [
@@ -182,7 +183,7 @@
         "kerlescan": {
             "editable": true,
             "git": "https://github.com/beav/kerlescan.git",
-            "ref": "ac6c0e12a5d9fa778513eaecb999d72e503e56d9"
+            "ref": "502bb104f8fa0bd6afeac5f3b8dbbeace3170617"
         },
         "logstash-formatter": {
             "hashes": [
