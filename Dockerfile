@@ -22,6 +22,8 @@ RUN microdnf install --setopt=install_weak_deps=0 --setopt=tsflags=nodocs -y \
     microdnf install --setopt=tsflags=nodocs -y python38-devel gcc && \
     rpm -qa | sort > packages-after-devel-install.txt 
 
+RUN adduser --gid  0 -d /opt/app-root --no-create-home insights
+
 RUN pip3 install --upgrade pip setuptools wheel && \
     pip3 install --upgrade pipenv && \
     pipenv sync
@@ -32,5 +34,11 @@ RUN if [ "$TEST_IMAGE" = "true" ]; then chgrp -R 0 $APP_ROOT && chmod -R g=u $AP
 RUN microdnf remove -y $( comm -13 packages-before-devel-install.txt packages-after-devel-install.txt ) && \
     rm packages-before-devel-install.txt packages-after-devel-install.txt && \
     microdnf clean all
+
+RUN chown -R insights:0 /opt/app-root && \
+    chgrp -R 0 /opt/app-root && \
+    chmod -R g=u /opt/app-root
+
+USER insights
 
 CMD pipenv run ./run_app.sh
