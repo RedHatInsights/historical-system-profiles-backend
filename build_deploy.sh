@@ -39,12 +39,12 @@ else
     podman push "${IMAGE_NAME}:${IMAGE_TAG}"
 
     if [[ $GIT_BRANCH == *"security-compliance"* ]]; then
-        docker --config="$DOCKER_CONF" tag "${IMAGE}:${IMAGE_TAG}" "${IMAGE}:security-compliance"
-        docker --config="$DOCKER_CONF" push "${IMAGE}:security-compliance"
+        podman tag "${IMAGE_NAME}:${IMAGE_TAG}" "${IMAGE_NAME}:security-compliance"
+        podman push "${IMAGE_NAME}:security-compliance"
     else
         for TAG in "latest" "qa"; do
-            docker --config="$DOCKER_CONF" tag "${IMAGE_NAME}:${IMAGE_TAG}" "${IMAGE_NAME}:$TAG"
-            docker --config="$DOCKER_CONF" push "${IMAGE_NAME}:$TAG"
+            podman tag "${IMAGE_NAME}:${IMAGE_TAG}" "${IMAGE_NAME}:$TAG"
+            podman push "${IMAGE_NAME}:$TAG"
     fi
     done
 fi
