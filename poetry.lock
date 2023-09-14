@@ -1355,9 +1355,6 @@ jsonschema = ">=4.18.0,<5.0.0"
 jsonschema-specifications = ">=2023.5.2,<2024.0.0"
 rfc3339-validator = "*"
 
-[package.extras]
-docs = ["sphinx (>=5.3.0,<6.0.0)", "sphinx-immaterial (>=0.11.0,<0.12.0)"]
-
 [[package]]
 name = "openapi-spec-validator"
 version = "0.6.0"
@@ -1666,14 +1663,14 @@ name = "pytest-mock"
 version = "3.11.1"
 description = "Thin-wrapper around the mock package for easier use with pytest"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.7"
 files = [
     {file = "pytest-mock-3.11.1.tar.gz", hash = "sha256:7f6b125602ac6d743e523ae0bfa71e1a697a2f5534064528c6ff84c2f7c2fc7f"},
     {file = "pytest_mock-3.11.1-py3-none-any.whl", hash = "sha256:21c279fff83d70763b05f8874cc9cfb3fcacd6d354247a976f9529d19f9acf39"},
 ]
 
 [package.dependencies]
-pytest = ">=2.7"
+pytest = ">=5.0"
 
 [package.extras]
 dev = ["pre-commit", "pytest-asyncio", "tox"]
