@@ -100,6 +100,19 @@ class HSPApiTests(utils.ApiTest):
             "ids [9db484bc-ab2a-11ea-9a15-98fa9b07d419] not available to display",
         )
 
+    def test_filter_hsps_by_inventory_groups(self):
+        # TODO: setup fixtures to have multiple profiles for two different inventory groups
+        # with self.test_flask_app.app_context():
+        #     db_interface.create_profile("eca1c5c4-ab27-11ea-958a-98fa9b07d419", {}, "1234", "5678")
+        response = self.client.get(
+            "/api/historical-system-profiles/v1/systems/eca1c5c4-ab27-11ea-958a-98fa9b07d419",
+            headers=fixtures.AUTH_HEADER,
+        )
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        # TODO: check that expected amount of HSPs was returned
+        self.assertEquals(1, len(data["data"][0]["profiles"]))
+
     def test_pagination(self):
         # create inventory record
         self.addInventoryRecord(

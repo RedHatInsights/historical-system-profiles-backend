@@ -44,11 +44,18 @@ def create_profile(inventory_id, profile, account_number, org_id, groups=None):
 
 
 def get_hsps_by_inventory_id(inventory_id, account_number, org_id, limit, offset):
+    print('----------------------- historical_system_profiles/db_interface.py')
+    print("inventory_id: {}".format(inventory_id))
+    print("account_number: {}".format(account_number))
+    print("org_id: {}".format(org_id))
+    print("limit: {}".format(limit))
+    print("offset: {}".format(offset))
     if org_id:
         query = HistoricalSystemProfile.query.filter(
             HistoricalSystemProfile.org_id == org_id,
             HistoricalSystemProfile.inventory_id == inventory_id,
         )
+        # TODO: filter permitted by inventory group
     elif account_number:
         query = HistoricalSystemProfile.query.filter(
             HistoricalSystemProfile.account == account_number,
@@ -61,7 +68,9 @@ def get_hsps_by_inventory_id(inventory_id, account_number, org_id, limit, offset
 
     query = query.order_by(HistoricalSystemProfile.captured_on.desc())
     query = query.limit(limit).offset(offset)
+    print("query: {}".format(query))
     query_results = query.all()
+    print("query_results: {}".format(query_results))
 
     message = "read historical system profiles"
     current_app.logger.audit(message, request=request, success=True)

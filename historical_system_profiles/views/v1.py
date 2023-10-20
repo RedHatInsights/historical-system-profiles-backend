@@ -4,10 +4,11 @@ from collections import Counter
 from http import HTTPStatus
 
 from dateutil.relativedelta import relativedelta
-from flask import Blueprint, current_app, request
+from flask import Blueprint, current_app, g, request
 from kerlescan import view_helpers
 from kerlescan.exceptions import HTTPError, RBACDenied
 from kerlescan.inventory_service_interface import fetch_systems_with_profiles
+from kerlescan.rbac_service_interface import get_rbac_filters
 from kerlescan.service_interface import get_key_from_headers
 from kerlescan.view_helpers import validate_uuids
 
@@ -52,6 +53,61 @@ def _get_current_names_for_profiles(hsps):
         enriched_hsps.append(hsp)
 
     return enriched_hsps
+
+
+def _filter_inventory_groups_access(hsps):
+    # g = global session variable for the request. Kerlescan stores filters into 'g' => g.get("rbac_filters") to get the RBAC data
+    rbac_group_filters = g.get("rbac_filters")
+    print("rbac_group_filters: {}").format(rbac_group_filters)
+    for rbac_filter in filters:
+        print("rbac_filter: {}").format(rbac_filters)
+    return []
+
+
+# def _filter_inventory_groups_access(hsps):
+#     # hsp.inventory_id: f1aa00fc-1690-4c53-b244-b338e99bf006
+#     # hsp.created_on: 2023-10-20 13:29:14.073994
+#     # hsp.groups: [{'id': '74cf732b-7f35-4d3c-8be2-30ba4d91479f', 'name': 'group2'}]
+#     # hsp.inventory_id: f1aa00fc-1690-4c53-b244-b338e99bf006
+#     # hsp.created_on: 2023-10-20 13:24:19.739052
+#     # hsp.groups: []
+#     # hsp.inventory_id: f1aa00fc-1690-4c53-b244-b338e99bf006
+#     # hsp.created_on: 2023-10-20 12:34:03.872093
+#     # hsp.groups: []
+#     # hsp.inventory_id: f1aa00fc-1690-4c53-b244-b338e99bf006
+#     # hsp.created_on: 2023-10-20 12:27:45.335749
+#     # hsp.groups: []
+#     # hsp.inventory_id: f1aa00fc-1690-4c53-b244-b338e99bf006
+#     # hsp.created_on: 2023-10-20 12:26:15.182415
+#     # hsp.groups: []
+#     sorted_hsps = sorted(hsps, key=lambda p: p.created_on)
+#     # [<HistoricalSystemProfile 3c44e8b4-786a-440e-bb8f-8b524c5c7c15>,
+#     # <HistoricalSystemProfile 70ffc2ce-7a6a-4b0e-8248-c5e2c850a68f>,
+#     # <HistoricalSystemProfile 149faca7-d009-4b3e-a86f-403e09d08d58>,
+#     # <HistoricalSystemProfile ff964502-494e-4d44-bb6e-f46de62f50f1>,
+#     # <HistoricalSystemProfile e58ebdc7-e022-4076-a79f-d250deeddabb>]
+#
+#     # sorted_hsps[-1].groups: [{'id': '74cf732b-7f35-4d3c-8be2-30ba4d91479f', 'name': 'group2'}]
+#     if len(sorted_hsps) > 0:
+#         rbac_data = [
+#             {
+#                 "resourceDefinitions": [
+#                     {
+#                         "attributeFilter": {
+#                             "key": "group.id",
+#                             "value": [group['id'] for group in sorted_hsps[-1].groups],
+#                             "operation": "in",
+#                         }
+#                     }
+#                 ],
+#                 "permission": "inventory:hosts:read",
+#             }
+#         ]
+#         accessible_groups = get_rbac_filters(rbac_data) # {'group.id': [{'id': '74cf732b-7f35-4d3c-8be2-30ba4d91479f'}]}
+#         accessible_group_ids = [group['id'] for group in accessible_groups['group.id']]
+#         return [hsp for hsp in hsps if any(ref_id in [group['id'] for group in hsp.groups] for ref_id in accessible_group_ids)]
+#     else:
+#         return []
 
 
 def _filter_old_hsps(hsps):
@@ -153,8 +209,9 @@ def get_hsps_by_inventory_id(inventory_id, limit, offset):
         inventory_id, account_number, org_id, limit, offset
     )
     valid_profiles = _filter_old_hsps(query_results)
+    accessible_profiles = _filter_inventory_groups_access(valid_profiles)
 
-    if not valid_profiles:
+    if not accessible_profiles:
         message = "no historical profiles found for inventory_id %s" % inventory_id
         current_app.logger.audit(message, request=request, success=False)
         raise HTTPError(
@@ -166,7 +223,7 @@ def get_hsps_by_inventory_id(inventory_id, limit, offset):
     # the full records, then slicing and sorting
 
     profile_metadata = []
-    for profile in valid_profiles:
+    for profile in accessible_profiles:
         profile_metadata.append(
             {
                 "captured_date": profile.captured_date,

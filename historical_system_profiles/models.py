@@ -17,12 +17,12 @@ class HistoricalSystemProfile(db.Model):
 
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     account = db.Column(db.String(10))
-    inventory_id = db.Column(UUID(as_uuid=True), index=True)
+    inventory_id = db.Column(UUID(as_uuid=True), index=True) # NOTE: system_id
     org_id = db.Column(db.String(36), index=True)
     created_on = db.Column(db.DateTime, default=datetime.utcnow)
-    system_profile = db.Column(JSONB)
+    system_profile = db.Column(JSONB) # NOTE: filtering system profiles
     captured_on = db.Column(db.DateTime, default=datetime.utcnow)
-    groups = db.Column(JSONB)
+    groups = db.Column(JSONB) # NOTE: according to inventory groups
 
     def __init__(self, system_profile, inventory_id, account, org_id, groups):
         self.inventory_id = inventory_id
