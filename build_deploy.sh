@@ -30,7 +30,7 @@ trap job_cleanup EXIT ERR SIGINT SIGTERM
 
 if test -f /etc/redhat-release && grep -q -i "release 7" /etc/redhat-release; then
     # on RHEL7, use docker
-    DOCKER_CONF="${TMP_JOB_DIR}/.docker"
+    DOCKER_CONF="$TMP_JOB_DIR/.docker"
     mkdir -p "$DOCKER_CONF"
     docker --config="$DOCKER_CONF" login -u="$QUAY_USER" -p="$QUAY_TOKEN" quay.io
     docker --config="$DOCKER_CONF" login -u="$RH_REGISTRY_USER" -p="$RH_REGISTRY_TOKEN" registry.redhat.io
